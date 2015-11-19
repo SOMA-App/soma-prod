@@ -10,7 +10,16 @@ Reiniciando o Boot2Docker
     boot2docker stop
     boot2docker start
 
-Fazendo o Build e criando a imagem
+## Fazendo o build e criando a imagem
+
+### Alpine com Java 8
+
+    cd soma-prod/doc/original
+    ./build-alpine-java
+    docker images | grep alpine-java
+    cd ../..
+
+### SOMA para produção
 
     docker build -t HUB-USER-NAME/soma-prod  .
 

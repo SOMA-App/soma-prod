@@ -5,6 +5,55 @@ Apache Tomcat8 sobre o Alpine Linux
 
 Este projeto foi testado com a versão 1.8.2 do Docker
 
+## Alpine
+
+O Alpine usa o Apk como **package manager**
+
+Exemplo de comando:
+
+    apk update
+
+Showing available updates. Show what packages that have an update available:
+
+    apk version -v # equivalente a "aptitude upgrade --simulate" do Debian
+
+Update a particular package
+
+    apk add -u package1 package2 # equivalente do Debian : aptitude install package1 package2
+
+Installing packages
+
+    apk add package1 package2 # equivalente do Debian: apt-get install package1 package2
+
+Searching package database
+
+Alpine will only search package names.
+
+    apk search searchword # equivalente do Debian: apt-cache search searchword
+
+### Network
+
+Alpine uses /etc/network/interfaces, just like Debian. The main reason is because 
+this is the way busybox does it.
+
+Arquivo /etc/network/interfaces:
+
+    auto eth0
+    iface eth0 inet static
+     address 192.168.0.1
+     netmask 255.255.255.0
+     broadcast 192.168.0.255
+     
+    auto eth0:0
+    iface eth0:0 inet static
+     address 192.168.1.1
+     netmask 255.255.255.0
+     broadcast 192.168.1.255
+    # etc.
+
+
+## Docker
+
 Reiniciando o Boot2Docker
 
     boot2docker stop
@@ -12,14 +61,25 @@ Reiniciando o Boot2Docker
 
 ## Fazendo o build e criando a imagem
 
-### Alpine com Java 8
+Execute no Terminal
 
-    cd soma-prod/doc/original
+    cd soma-prod/
+
+### Contêiner Maria DB
+
+    cd doc/mariadb
+    ./build-mariadb
+    docker images | grep mariadb
+    cd ../..
+
+### Contêiner Alpine com Java 8
+
+    cd doc/original
     ./build-alpine-java
     docker images | grep alpine-java
     cd ../..
 
-### SOMA para produção
+### Contêiner SOMA para produção
 
     docker build -t HUB-USER-NAME/soma-prod  .
 
@@ -30,6 +90,10 @@ Após o build podemos inspecionar os layers da imagem gerada usando o comando `d
 Verificando
 
     docker images | grep soma-prod
+
+Para executar interativamente uma shell use:
+
+    docker run -i -t --rm --name soma_prod --dns 192.168.1.254 -p 1443:1443 HUB-USER-NAME/soma-prod /bin/bash
 
 Para executar:
 

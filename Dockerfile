@@ -8,8 +8,13 @@ FROM anapsix/alpine-java:jdk8
 MAINTAINER João Antonio Ferreira "joao.parana@gmail.com"
 
 ENV REFRESHED_AT 2015-11-18
-RUN apk add --update bash && rm -rf /var/cache/apk/*
-CMD ["/bin/bash"]
+RUN apk add --update bash && \
+    apk search gpg && \
+    apk add gpgme && \
+    apk add lsof logrotate && \
+    rm -rf /var/cache/apk/*
+
+# # RUN apk add supervisor
 
 # Install tomcat8
 ENV CATALINA_HOME     /usr/local/tomcat
@@ -23,45 +28,44 @@ RUN mkdir -p "$CATALINA_HOME" && \
     mkdir -p "$SOMA_HOME/logs" && \
     mkdir -p "$SOMA_HOME/setup"
 
-WORKDIR $CATALINA_HOME
+# RUN mkdir -p /var/cache/apk && \
+#     ln -s /var/cache/apk /etc/apk/cache
+
 
 # see https://www.apache.org/dist/tomcat/tomcat-8/KEYS
-# RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
-#   05AB33110949707C93A279E3D3EFE6B686867BA6 \
-#   07E48665A34DCAFAE522E5E6266191C37C037D42 \
-#   47309207D818FFD8DCD3F83F1931D684307A10A5 \
-#   541FBE7D8F78B25E055DDEE13C370389288584E7 \
-#   61B832AC2F1C5A90F0F9B00A1C506407564C17A3 \
-#   79F7026C690BAA50B92CD8B66A3AD3F4F22C4FED \
-#   9BA44C2621385CB966EBA586F72C284D731FABEE \
-#   A27677289986DB50844682F8ACB77FC2E86E29AC \
-#   A9C5DF4D22E99998D9875A5110C01C5A2F6059E7 \
-#   DCFD35E0BF8CA7344752DE8B6FB21E8933C60243 \
-#   F3A04C595DB5B6A5F1ECA43E3B7BBB100D811BBE \
-#   F7DA48BB64BCB84ECBA7EE6935CD23C10D498E23
+RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
+  05AB33110949707C93A279E3D3EFE6B686867BA6 \
+  07E48665A34DCAFAE522E5E6266191C37C037D42 \
+  47309207D818FFD8DCD3F83F1931D684307A10A5 \
+  541FBE7D8F78B25E055DDEE13C370389288584E7 \
+  61B832AC2F1C5A90F0F9B00A1C506407564C17A3 \
+  79F7026C690BAA50B92CD8B66A3AD3F4F22C4FED \
+  9BA44C2621385CB966EBA586F72C284D731FABEE \
+  A27677289986DB50844682F8ACB77FC2E86E29AC \
+  A9C5DF4D22E99998D9875A5110C01C5A2F6059E7 \
+  DCFD35E0BF8CA7344752DE8B6FB21E8933C60243 \
+  F3A04C595DB5B6A5F1ECA43E3B7BBB100D811BBE \
+  F7DA48BB64BCB84ECBA7EE6935CD23C10D498E23
 
 ENV TOMCAT_MAJOR 8
 ENV TOMCAT_VERSION 8.0.28
 # ENV TOMCAT_TGZ_URL https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
 ENV TOMCAT_TGZ_URL http://archive.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
 
+WORKDIR $CATALINA_HOME
+
 RUN set -x \
   && curl -fSL "$TOMCAT_TGZ_URL" -o tomcat.tar.gz \
   && curl -fSL "$TOMCAT_TGZ_URL.asc" -o tomcat.tar.gz.asc
 
-# RUN gpg --verify tomcat.tar.gz.asc
+RUN gpg --verify tomcat.tar.gz.asc
 
 RUN tar -xvf tomcat.tar.gz --strip-components=1 \
   && rm bin/*.bat \
   && rm tomcat.tar.gz*
 
-# Update distro and install some packages
+# On Debian I need Update distro and install some packages
 # RUN apt-get update && \
-#     apt-get upgrade -y && \
-#     apt-get install lsof && \
-#     apt-get install curl -y && \
-#     apt-get install supervisor -y && \
-#     apt-get install logrotate -y && \
 #     apt-get install locales -y && \
 #     update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX && \
 #     locale-gen en_US.UTF-8 && \
@@ -103,4 +107,5 @@ RUN cat /etc/timezone
 # CMD ["sh", "/bin/start-xe-and-jee.sh", "Iniciando"]
 
 EXPOSE 8080
-CMD ["catalina.sh", "run"]
+# CMD ["catalina.sh", "run"]
+CMD ["/bin/bash"]

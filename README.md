@@ -93,13 +93,16 @@ Verificando
 
 Para executar interativamente uma shell use:
 
-    docker run -i -t --rm --name soma_prod --dns 192.168.1.254 -p 1443:1443 HUB-USER-NAME/soma-prod /bin/bash
+    docker run -i -t --rm --name soma_prod --dns 8.8.8.8 -p 1443:1443 HUB-USER-NAME/soma-prod /bin/bash
 
 Para executar:
 
-    docker run -d --name mysql_db -p 9306:3306 parana/mysql
-    docker run --name soma_prod --link mysql_db:mysql -p 1443:1443 -d HUB-USER-NAME/soma-prod
-    open http://dockerhost.local:1443/mxml/soma.jsp
+    docker run -d --name mysql_db -e MYSQL_ROOT_PASSWORD=secreta -p 9306:3306 mariadb
+    docker run --name soma_prod --link mysql_db:mysql \
+           -p 1443:1443 -d HUB-USER-NAME/soma-prod  catalina.sh run
+    open http://192.168.59.103:1443 # # Usando o endereço IP do Boot2Docker
+    # Usando simbolo para nome do Host cadastrado em /etc/hosts.
+    open http://dockerhost.local:1443/mxml/soma.jsp 
 
 Em outro aba de Terminal execute
 

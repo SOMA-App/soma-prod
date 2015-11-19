@@ -56,7 +56,7 @@ if [ "$1" = 'mysqld' ]; then
       GRANT ALL ON *.* TO 'root'@'%' WITH GRANT OPTION ;
       DROP DATABASE IF EXISTS test ;
       FLUSH PRIVILEGES ;
-    EOSQL
+EOSQL
 
     if [ ! -z "$MYSQL_ROOT_PASSWORD" ]; then
       mysql+=( -p"${MYSQL_ROOT_PASSWORD}" )

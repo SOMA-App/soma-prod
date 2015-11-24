@@ -81,7 +81,7 @@ Execute no Terminal
 
 ### Contêiner SOMA para produção
 
-    docker build -t HUB-USER-NAME/soma-prod  .
+    docker build -t HUB-USER-NAME/soma-prod .
 
 Substitua o token `HUB-USER-NAME` pelo seu login em [http://hub.docker.com](http://hub.docker.com)
 

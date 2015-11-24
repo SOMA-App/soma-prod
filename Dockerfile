@@ -81,7 +81,6 @@ RUN sed -i -E "s/8080/1443/g" $CATALINA_HOME/conf/server.xml
 RUN echo '---- cat $CATALINA_HOME/conf/server.xml  ----' && \
     cat $CATALINA_HOME/conf/server.xml | grep 1443
 
-ADD db-provision.sh $SOMA_HOME/setup/db-provision.sh
 WORKDIR $SOMA_HOME/setup
 # RUN $SOMA_HOME/setup/db-provision.sh
 
@@ -91,21 +90,8 @@ EXPOSE 2037
 # Tomcat web container
 EXPOSE 1443
 
-RUN echo 'É  necessário executar esse contêiner assim : docker run -d -h db-server -v ~/dev/shared:/usr/local/tomcat/shared  ... ' && \
-    echo '' && \
-    echo '*** ATENÇÃO: Na primeira vez que executar este contêiner execute o comando abaixo após o Oracle estar UP ' && \
-    echo 'docker exec  mytomcat sqlplus sys/oracle@XE as sysdba @/usr/local/soma/setup/ora-01.sql' && \
-    echo '# Estamos supondo o nome do contêiner igual a mytomcat' && \
-    echo '***' && \
-    echo 'NÃO ESQUEÇA DE TROCAR A SENHA DO USER SYS E SYSTEM !' && \
-    echo '***'
-
 RUN echo "Europe/London" > /etc/timezone
 RUN ls -lat /etc
 RUN cat /etc/timezone
 
-# CMD ["sh", "/bin/start-xe-and-jee.sh", "Iniciando"]
-
-EXPOSE 8080
-# CMD ["catalina.sh", "run"]
-CMD ["/bin/bash"]
+CMD ["catalina.sh", "run"]

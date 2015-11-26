@@ -84,17 +84,17 @@ RUN echo '---- cat $CATALINA_HOME/conf/server.xml  ----' && \
 WORKDIR $SOMA_HOME/setup
 
 #   Considerando os dados abaixo
-#   CREATE DATABASE: my_soma_db 
+#   CREATE DATABASE: my_soma_db
 #   CREATE USER: soma
 #   IDENTIFIED BY: soma_754
 ENV SOMA_JDBC_USER soma
 ENV SOMA_JDBC_PASS soma_754
-# URL para MySQL obedece a gamática abaixo:  
+# URL para MySQL obedece a gamática abaixo:
 # jdbc:mysql://[host1][:port1][,[host2][:port2]]...[/[database]] [?propertyName1=propertyValue1[&propertyName2=propertyValue2]...]
 ENV SOMA_JDBC_URL  jdbc:mysql://mysql_db:3306/my_soma_db
 
 # RUN $SOMA_HOME/setup/db-provision.sh
-ADD usr-app-soma usr-app-soma 
+ADD usr-app-soma usr-app-soma
 RUN mkdir -p /usr/app && \
     chmod 777 /usr/app && \
     ln -s $SOMA_HOME /usr/app/soma && \
@@ -110,5 +110,8 @@ EXPOSE 1443
 RUN echo "Europe/London" > /etc/timezone
 RUN ls -lat /etc
 RUN cat /etc/timezone
+
+RUN java -version
+RUN env | grep soma
 
 CMD ["catalina.sh", "run"]

@@ -11,9 +11,8 @@ ENV REFRESHED_AT 2015-11-18
 RUN apk add --update bash && \
     apk search gpg && \
     apk add gpgme && \
-    apk add lsof logrotate && \
-    rm -rf /var/cache/apk/*
-
+    apk add lsof logrotate mysql-client 
+    
 # # RUN apk add supervisor
 
 # Install tomcat8
@@ -81,17 +80,16 @@ RUN sed -i -E "s/8080/1443/g" $CATALINA_HOME/conf/server.xml
 RUN echo '---- cat $CATALINA_HOME/conf/server.xml  ----' && \
     cat $CATALINA_HOME/conf/server.xml | grep 1443
 
+# Para compilar fontes Java com encoding UTF-8
+ENV JAVA_TOOL_OPTIONS "-Dfile.encoding=UTF8"
+
 WORKDIR $SOMA_HOME/setup
 
-#   Considerando os dados abaixo
-#   CREATE DATABASE: my_soma_db
-#   CREATE USER: soma
-#   IDENTIFIED BY: soma_754
 ENV SOMA_JDBC_USER soma
-ENV SOMA_JDBC_PASS soma_754
+ENV SOMA_JDBC_PASS cepel123
 # URL para MySQL obedece a gamática abaixo:
 # jdbc:mysql://[host1][:port1][,[host2][:port2]]...[/[database]] [?propertyName1=propertyValue1[&propertyName2=propertyValue2]...]
-ENV SOMA_JDBC_URL  jdbc:mysql://mysql_db:3306/my_soma_db
+ENV SOMA_JDBC_URL  jdbc:mysql://mysql_db.local:3306/my_soma_db
 
 # RUN $SOMA_HOME/setup/db-provision.sh
 ADD usr-app-soma usr-app-soma
@@ -110,6 +108,8 @@ EXPOSE 1443
 RUN echo "Europe/London" > /etc/timezone
 RUN ls -lat /etc
 RUN cat /etc/timezone
+
+# RUN rm -rf /var/cache/apk/*
 
 RUN java -version
 RUN env | grep soma

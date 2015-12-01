@@ -11,8 +11,8 @@ ENV REFRESHED_AT 2015-11-18
 RUN apk add --update bash && \
     apk search gpg && \
     apk add gpgme && \
-    apk add lsof logrotate mysql-client 
-    
+    apk add lsof logrotate mysql-client
+
 # # RUN apk add supervisor
 
 # Install tomcat8
@@ -86,7 +86,7 @@ ENV JAVA_TOOL_OPTIONS "-Dfile.encoding=UTF8"
 WORKDIR $SOMA_HOME/setup
 
 ENV SOMA_JDBC_USER soma
-ENV SOMA_JDBC_PASS cepel123
+ENV SOMA_JDBC_PASS xyz_639
 # URL para MySQL obedece a gamática abaixo:
 # jdbc:mysql://[host1][:port1][,[host2][:port2]]...[/[database]] [?propertyName1=propertyValue1[&propertyName2=propertyValue2]...]
 ENV SOMA_JDBC_URL  jdbc:mysql://mysql_db.local:3306/my_soma_db

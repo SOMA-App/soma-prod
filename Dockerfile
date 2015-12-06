@@ -1,5 +1,10 @@
 FROM anapsix/alpine-java:jdk8
 #
+# TODO: Avaliar a imagem frolvlad/alpine-oraclejdk8 que parece ser melhor
+# pois trata o problema de java.net.InetAddress que não resolvia endereço IP
+#
+
+#
 # Esta imagem da qual herdo as funcionalidades inclui Java JDK 8 da Oracle,
 # e glibc-2.21. Sobre ela instalo o Bash e o Tomcat 8
 #
@@ -98,6 +103,9 @@ RUN mkdir -p /usr/app && \
     ln -s $SOMA_HOME /usr/app/soma && \
     chmod 777 $SOMA_HOME && \
     chmod 777 /usr/app/soma
+
+# Resolvendo problema com java.net.InetAddress que não resolvia endereço IP. 
+RUN echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
 
 WORKDIR $CATALINA_HOME
 # LCDS RTMP channel

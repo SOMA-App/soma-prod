@@ -117,9 +117,13 @@ RUN echo "Europe/London" > /etc/timezone
 RUN ls -lat /etc
 RUN cat /etc/timezone
 
+# Resolvendo problema com java.net.InetAddress que não resolvia endereço IP. 
+RUN echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
+
 # RUN rm -rf /var/cache/apk/*
 
 RUN java -version
 RUN env | grep soma
 
 CMD ["catalina.sh", "run"]
+

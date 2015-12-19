@@ -81,9 +81,10 @@ Execute no Terminal
 
 ### Contêiner SOMA para produção
 
-    docker build -t HUB-USER-NAME/soma-prod .
+    export HUB_USER_NAME=parana
+    docker build -t $HUB_USER_NAME/soma-prod .
 
-Substitua o token `HUB-USER-NAME` pelo seu login em [http://hub.docker.com](http://hub.docker.com)
+Substitua o token `HUB_USER_NAME` pelo seu login em [http://hub.docker.com](http://hub.docker.com)
 
 Após o build podemos inspecionar os layers da imagem gerada usando o comando `dockviz images -t`.
 
@@ -93,13 +94,13 @@ Verificando
 
 Para executar interativamente uma shell use:
 
-    docker run -i -t --rm --name soma_prod --dns 8.8.8.8 -p 1443:1443 HUB-USER-NAME/soma-prod /bin/bash
+    docker run -i -t --rm --name soma_prod --dns 8.8.8.8 -p 1443:1443 $HUB_USER_NAME/soma-prod /bin/bash
 
 Para executar:
 
     docker run -d --name mysql_db -e MYSQL_ROOT_PASSWORD=secreta -p 9306:3306 mariadb
     docker run --name soma_prod --link mysql_db:mysql \
-           -p 1443:1443 -d HUB-USER-NAME/soma-prod  catalina.sh run
+           -p 1443:1443 -d $HUB_USER_NAME/soma-prod  catalina.sh run
     open http://192.168.59.103:1443 # # Usando o endereço IP do Boot2Docker
     # Usando simbolo para nome do Host cadastrado em /etc/hosts.
     open http://dockerhost.local:1443/mxml/soma.jsp 

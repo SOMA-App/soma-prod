@@ -1,5 +1,7 @@
 # soma-prod
 
+> Atenção: este projeto precisa ser atualizado para usar Oracle 12+, PostgreSQL 12+, Tomcat 9.041+ e java 12+ 
+
 soma-prod cria uma imagem para contêiner Docker com Java JDK 8, 
 Apache Tomcat8 sobre o Alpine Linux
 
